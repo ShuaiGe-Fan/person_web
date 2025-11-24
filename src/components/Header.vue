@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header-container">
       <div class="logo">
-        <span class="logo-icon">&lt;/&gt;</span>
+        <!-- <span class="logo-icon">&lt;/&gt;</span> -->
         <span class="logo-text">飞飞公主</span>
       </div>
       <nav class="nav">
