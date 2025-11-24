@@ -2,55 +2,23 @@
 
 name: Feifeigongzhu 网站部署到阿里云 ECS
 
-# 触发部署的条件：推送到 main 分支时执行
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+# ... (on: 和 jobs: build-and-deploy: 配置不变)
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 检出代码
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # 2. 设置 Node.js 环境
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22' # 使用长期支持版本
-
-      # 3. 安装依赖
-      - name: Install dependencies
-        run: npm install
-
+      # ... (步骤 1, 2, 3, 4: Checkout, Setup Node, Install, Build 不变)
+      
       # 4. 构建 Vue 项目
-      # 默认构建输出目录是 dist
       - name: Build Vue project
         run: npm run build
 
-      # 5. 传输构建产物到阿里云 ECS (使用 SCP)
-      # ⚠️ 确保 /var/www/my-resume-website 目录已在服务器上创建
-      - name: Transfer build artifacts to ECS
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
-          username: ${{ secrets.ALIYUN_FEIFEIGONGZHU_USERNAME }}
-          key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
-          port: 22
-          # 传输本地构建的 dist 文件夹内容
-          source: "dist/*"
-          # 服务器上的目标目录，文件将被复制到这里
-          target: "/var/www/html"
-          # 确保目标路径存在
-          # 远程执行脚本：在文件传输前先清理目标目录
-          
-      # 6. 在 ECS 上执行部署清理和重启服务
-      - name: Execute remote commands on ECS
+      # =========================================================
+      # 🎯 步骤 5: 清理目标目录（您询问的新增步骤）
+      # =========================================================
+      - name: Execute remote commands (Pre-clean)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
@@ -58,17 +26,26 @@ jobs:
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
           
-          # 远程执行的命令脚本
+          # 远程执行的命令脚本：清理旧文件
           script: |
-            # 确保目标路径存在
-            DEPLOY_PATH="/var/www/html"
-            
-            # 清理旧备份
-            echo "Cleaning up old files in $DEPLOY_PATH..."
-            # 这一步仅作演示，实际生产环境中可能需要更复杂的版本管理
-            
-            # 启动/重启 Nginx 或相关服务
-            echo "Restarting Nginx..."
-            # 示例命令 (根据您的实际配置修改)
-            sudo systemctl restart nginx
-            echo "Deployment successful!"
+            DEPLOY_PATH="/var/www/html" # 目标目录
+            echo "Cleaning up all files in $DEPLOY_PATH before transfer..."
+            sudo rm -rf $DEPLOY_PATH/* # 删除 /var/www/html/ 下的所有内容
+            echo "Old files removed."
+
+      # =========================================================
+      # 🎯 步骤 6: 传输文件 (在清理后进行)
+      # =========================================================
+      - name: Transfer build artifacts to ECS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
+          username: ${{ secrets.ALIYUN_FEIFEIGONGZHU_USERNAME }}
+          key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
+          port: 22
+          source: "dist/" 
+          target: "/var/www/html" 
+          
+      # 7. 在 ECS 上执行服务重启
+      - name: Execute remote commands (Restart Service)
+        # ... (后续代码不变)
