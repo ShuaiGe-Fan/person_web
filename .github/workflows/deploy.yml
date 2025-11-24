@@ -64,7 +64,7 @@ jobs:
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
           # 传输本地 dist 目录下的所有内容
-          source: "dist/*"
+          source: "dist/"
           # 服务器上的目标目录
           target: "/var/www/html"
           
