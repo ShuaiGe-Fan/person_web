@@ -15,25 +15,26 @@ jobs:
 
     steps:
       # 1. 检出代码
-      - name: Checkout code
+      - name: 1. Checkout code
         uses: actions/checkout@v4
 
       # 2. 设置 Node.js 环境
-      - name: Set up Node.js
+      - name: 2. Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # 使用长期支持版本
+          node-version: '20' # 建议使用稳定版本 20
 
       # 3. 安装依赖
-      - name: Install dependencies
+      - name: 3. Install dependencies
         run: npm install
 
       # 4. 构建 Vue 项目
-      # 默认构建输出目录是 dist
-      - name: Build Vue project
+      - name: 4. Build Vue project
         run: npm run build
-        
-      - name: Execute remote commands (Pre-clean)
+
+      # 5. 在 ECS 上执行清理操作 (在文件传输前清空目标目录)
+      # 这是之前解决 "多了一层dist" 的关键步骤
+      - name: 5. Execute remote commands (Pre-clean Target Directory)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
@@ -41,31 +42,29 @@ jobs:
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
           
-          # 远程执行的命令脚本：清理旧文件
           script: |
             DEPLOY_PATH="/var/www/html" # 目标目录
-            echo "Cleaning up all files in $DEPLOY_PATH before transfer..."
-            # ⚠️ 此命令将删除目标目录下的所有文件和文件夹
+            echo "Cleaning up old files in $DEPLOY_PATH before transfer..."
+            # 确保目标路径存在且清空内容
             sudo rm -rf $DEPLOY_PATH/*
             echo "Old files removed."
-      # 5. 传输构建产物到阿里云 ECS (使用 SCP)
-      # ⚠️ 确保 /var/www/my-resume-website 目录已在服务器上创建
-      - name: Transfer build artifacts to ECS
+
+      # 6. 传输构建产物到阿里云 ECS (使用 SCP)
+      # 确保传输的是 dist 目录里的内容到 /var/www/html 根目录
+      - name: 6. Transfer build artifacts to ECS (Using SCP)
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
           username: ${{ secrets.ALIYUN_FEIFEIGONGZHU_USERNAME }}
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
-          # 传输本地构建的 dist 文件夹内容
+          # 传输本地 dist 目录下的所有内容
           source: "dist/"
-          # 服务器上的目标目录，文件将被复制到这里
+          # 服务器上的目标目录
           target: "/var/www/html"
-          # 确保目标路径存在
-          # 远程执行脚本：在文件传输前先清理目标目录
           
-      # 6. 在 ECS 上执行部署清理和重启服务
-      - name: Execute remote commands on ECS
+      # 7. 在 ECS 上执行服务重启 (最后一步)
+      - name: 7. Execute remote commands (Restart Nginx Service)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
@@ -73,17 +72,8 @@ jobs:
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
           
-          # 远程执行的命令脚本
+          # 远程执行的命令脚本：重启 Nginx
           script: |
-            # 确保目标路径存在
-            DEPLOY_PATH="/var/www/html"
-            
-            # 清理旧备份
-            echo "Cleaning up old files in $DEPLOY_PATH..."
-            # 这一步仅作演示，实际生产环境中可能需要更复杂的版本管理
-            
-            # 启动/重启 Nginx 或相关服务
-            echo "Restarting Nginx..."
-            # 示例命令 (根据您的实际配置修改)
+            echo "Restarting Nginx service..."
             sudo systemctl restart nginx
             echo "Deployment successful!"
