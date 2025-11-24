@@ -56,6 +56,7 @@ jobs:
             echo "Old files removed."
 
       # 6. 传输构建产物到阿里云 ECS (使用 SCP)
+     
       - name: 6. Transfer build artifacts to ECS (Using SCP)
         uses: appleboy/scp-action@master
         with:
@@ -63,13 +64,14 @@ jobs:
           username: ${{ secrets.ALIYUN_FEIFEIGONGZHU_USERNAME }}
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
-          # 传输本地 dist 目录下的所有内容
-          source: "dist/dist"
-          # 服务器上的目标目录
-          target: "/var/www/html"
+          # 🌟 修改点 1: 上传整个 dist 文件夹（不带斜杠或通配符）
+          source: "dist" 
+          # 🌟 修改点 2: 目标改为一个临时的、唯一的路径
+          target: "/tmp/feifeigongzhu_deploy"
           
       # 7. 在 ECS 上执行权限修复和重启服务 (最后一步)
-      - name: 7. Execute remote commands (Fix Permissions and Restart Nginx)
+     # 7. 在 ECS 上执行移动文件、权限修复和重启服务 (最后一步)
+      - name: 7. Execute remote commands (Move Files, Fix Permissions, and Restart Nginx)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ALIYUN_FEIFEIGONGZHU_HOST }}
@@ -77,18 +79,33 @@ jobs:
           key: ${{ secrets.ALIYUN_FEIFEIGONGZHU_SSH_KEY }}
           port: 22
           
-          # 远程执行的命令脚本：修复权限和重启 Nginx
+          # 远程执行的命令脚本：
           script: |
             DEPLOY_PATH="/var/www/html"
+            TEMP_PATH="/tmp/feifeigongzhu_deploy"
             
+            # 1. 确保目标目录已清理（如果步骤 5 失败）
+            echo "Ensuring DEPLOY_PATH is clean..."
+            sudo rm -rf $DEPLOY_PATH/*
+            
+            # 2. 将临时目录中的 dist/ 内容移动到 /var/www/html
+            echo "Moving files from temporary location to $DEPLOY_PATH..."
+            # 使用 cp -R 复制内容（而不是目录本身）到目标目录
+            # 注意 cp 命令的语法：源路径后面加斜杠，表示复制内容
+            sudo cp -R $TEMP_PATH/dist/. $DEPLOY_PATH/
+            
+            # 3. 清理临时目录
+            echo "Cleaning up temporary directory $TEMP_PATH..."
+            sudo rm -rf $TEMP_PATH
+            
+            # 4. 修复权限
             echo "Fixing file ownership and permissions..."
-            # 1. 更改所有权给 Nginx 用户 (通常是 www-data)
             sudo chown -R www-data:www-data $DEPLOY_PATH
-            # 2. 更改目录权限为 755 (允许组和其他用户读取和进入)
             sudo find $DEPLOY_PATH -type d -exec chmod 755 {} \;
-            # 3. 更改文件权限为 644 (允许所有者和组用户读取)
             sudo find $DEPLOY_PATH -type f -exec chmod 644 {} \;
             
+            # 5. 重启 Nginx
             echo "Restarting Nginx service..."
             sudo systemctl restart nginx
             echo "Deployment successful!"
+        
