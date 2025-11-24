@@ -90,7 +90,7 @@ const submitComment = () => {
     const newComment: Comment = {
       id: comments.value.length + 1,
       name: form.name,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split('T')[0]!,
       content: form.content
     }
     comments.value.unshift(newComment)
