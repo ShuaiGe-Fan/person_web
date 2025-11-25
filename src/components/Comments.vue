@@ -159,7 +159,7 @@ const submitComment = () => {
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #8A2BE2;
+  border-color: rgb(178, 61, 206);
 }
 
 .form-textarea {
@@ -169,7 +169,7 @@ const submitComment = () => {
 
 .submit-btn {
   padding: 0.875rem 2rem;
-  background-color: #8A2BE2;
+  background-color: rgb(178, 61, 206);
   color: white;
   border: none;
   border-radius: 8px;
@@ -181,7 +181,7 @@ const submitComment = () => {
 }
 
 .submit-btn:hover {
-  background-color: #7B1FA2;
+  background-color: rgb(150, 50, 180);
 }
 
 .comments-list {
@@ -233,7 +233,7 @@ const submitComment = () => {
 }
 
 .reply-link {
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
   text-decoration: none;
   font-size: 0.9rem;
   align-self: flex-start;

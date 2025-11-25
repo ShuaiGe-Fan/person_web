@@ -84,7 +84,7 @@ const submitForm = () => {
 
 <style scoped>
 .contact {
-  background: linear-gradient(135deg, #8A2BE2 0%, #9370DB 100%);
+  background: linear-gradient(135deg, rgb(178, 61, 206) 0%, rgb(200, 100, 230) 100%);
   padding: 6rem 2rem;
   color: white;
 }
@@ -205,7 +205,7 @@ const submitForm = () => {
 .submit-button {
   padding: 1rem 2rem;
   background-color: white;
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
   border: none;
   border-radius: 8px;
   font-size: 1.1rem;

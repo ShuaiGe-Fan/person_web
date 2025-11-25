@@ -30,7 +30,7 @@
 
 <style scoped>
 .hero {
-  background: linear-gradient(135deg, #8A2BE2 0%, #9370DB 100%);
+  background: linear-gradient(135deg, rgb(178, 61, 206) 0%, rgb(200, 100, 230) 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -92,14 +92,14 @@
 }
 
 .btn-primary {
-  background-color: #8A2BE2;
+  background-color: rgb(178, 61, 206);
   color: white;
   border: 2px solid white;
 }
 
 .btn-primary:hover {
   background-color: white;
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
 }
 
 .btn-outline {
@@ -110,7 +110,7 @@
 
 .btn-outline:hover {
   background-color: white;
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
 }
 
 .hero-image {

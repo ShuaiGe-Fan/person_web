@@ -18,7 +18,7 @@
 .footer {
   background-color: #333;
   padding: 2rem;
-  border-top: 2px solid #8A2BE2;
+  border-top: 2px solid rgb(178, 61, 206);
 }
 
 .footer-container {
@@ -34,13 +34,13 @@
 }
 
 .footer-link {
-  color: #BA55D3;
+  color: rgb(200, 100, 230);
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .footer-link:hover {
-  color: #DA70D6;
+  color: rgb(220, 140, 240);
 }
 </style>
 

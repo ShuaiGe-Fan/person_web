@@ -118,7 +118,7 @@
 }
 
 .article-header.purple {
-  background-color: #8A2BE2;
+  background-color: rgb(178, 61, 206);
 }
 
 .article-header.blue {
@@ -151,7 +151,7 @@
 }
 
 .purple-tag {
-  background-color: #BA55D3;
+  background-color: rgb(200, 100, 230);
 }
 
 .blue-tag {
@@ -213,7 +213,7 @@
 }
 
 .purple-link {
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
 }
 
 .blue-link {

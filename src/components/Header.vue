@@ -40,8 +40,11 @@ const scrollTo = (selector: string) => {
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: rgba(138, 43, 226, 0.95);
-  backdrop-filter: blur(10px);
+  background-color: rgba(178, 61, 206, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
 .header-container {
@@ -60,6 +63,7 @@ const scrollTo = (selector: string) => {
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .logo-icon {
@@ -79,12 +83,16 @@ const scrollTo = (selector: string) => {
   color: white;
   text-decoration: none;
   font-size: 1rem;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
   cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .nav-link:hover {
-  opacity: 0.8;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 @media (max-width: 768px) {
@@ -99,6 +107,7 @@ const scrollTo = (selector: string) => {
   
   .nav-link {
     font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
   }
 }
 </style>

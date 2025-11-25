@@ -193,7 +193,7 @@
 
 .skill-progress {
   height: 100%;
-  background-color: #8A2BE2;
+  background-color: rgb(178, 61, 206);
   border-radius: 4px;
   transition: width 0.3s;
 }

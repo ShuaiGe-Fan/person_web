@@ -86,7 +86,7 @@
 
 .story-title {
   font-size: 2rem;
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
   margin: 0;
   font-weight: bold;
 }
@@ -113,7 +113,7 @@
 .stat-number {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
 }
 
 .stat-label {
@@ -148,7 +148,7 @@
 
 .education-icon {
   font-size: 2rem;
-  color: #8A2BE2;
+  color: rgb(178, 61, 206);
   flex-shrink: 0;
 }
 
